@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>支付宝付款 - 欢迎使用！</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    #{css([
+    "/app/Plugin/AlipayPersonal/View/Assets/Css/Pay.css",
+    "/assets/common/js/layer/theme/default/layer.css"
+    ])}
+
+    #{js("/assets/common/js/ready.js")}
+
+    #{set_script_var([
+    "tradeNo" => $order.trade_no ,
+    "createTime" => $order.create_time ,
+    "returnUrl" => $order.return_url,
+    "qrcode" => $config.alipay_url
+    ])}
+</head>
+
+<body>
+<div class="body">
+    <h1 class="mod-title">
+        <span class="ico-zfb"></span>
+    </h1>
+
+    <div class="mod-ct" style="margin-top: 2px;">
+        <div class="pc">
+            <div style="font-size: 32px;padding-top: 20px;">请实际支付 <b style="color: red;">
+                    #{$order.pay_amount}</b> <b style="color: #28dd81;">元</b>
+            </div>
+            #{if $order.pay_amount != $order.amount}
+                <div style="font-size: 14px;color: #888;margin-top: 8px;">订单金额 ￥#{$order.amount}，为自动识别订单，请按上方金额支付</div>
+            #{/if}
+            <div class="hr-top"></div>
+
+            <div class="qrcode-img-wrapper" data-role="qrPayImgWrapper">
+                <div data-role="qrPayImg" class="qrcode-img-area">
+                    <div class="ui-loading qrcode-loading" data-role="qrPayImgLoading" style="display: none;">加载中
+                    </div>
+                    <div style="position: relative;display: inline-block;">
+                        <div style="margin: 5px;display: block;" id="qrcode"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="zhuanzhang_box">
+                <div style="color: #35be0d;">
+                    <span class="pc-show">打开「<b
+                                style="color: #2872ff;font-size: 20px;">手机支付宝</b>」扫上面二维码</span>
+                    <button type="button" class="openAlipay" style="display: none;">👉点击我呼起支付宝进行支付👈</button>
+                </div>
+                <div class="jiantou">⇓</div>
+                <div style="color: red;">请填写实际支付金额：<b
+                            style="color: #c1c637;font-size: 30px;">#{$order.pay_amount}</b> <b
+                            style="color: #0ba798;">元</b>，填错将无法自动发货
+                </div>
+                <div class="jiantou">⇓</div>
+                <div style="color: lightseagreen;">付款成功，立即发货</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div>
+                <div class="tip ">
+                    <div style="margin-bottom: 10px;"><b style="font-size: 18px;">请在</b>
+                        <strong id="hour_show"><s id="h"></s>0时</strong>
+                        <strong id="minute_show"><s></s>0分</strong>
+                        <strong id="second_show"><s></s>0秒</strong>
+                        <b style="font-size: 18px;">完成支付!</b>
+                    </div>
+
+
+                </div>
+            </div>
+            <div class="detail" id="orderDetail">
+                <dl class="detail-ct" id="desc" style="display: none;">
+                    <dt>订单金额</dt>
+                    <dd>￥#{$order.amount}</dd>
+                    <dt>实际支付</dt>
+                    <dd>￥#{$order.pay_amount}</dd>
+                    <dt>商户订单：</dt>
+                    <dd id="ordernum">#{$order.trade_no}</dd>
+                    <dt>创建时间：</dt>
+                    <dd>#{$order.create_time}</dd>
+                    <dt>状态</dt>
+                    <dd>等待支付</dd>
+                </dl>
+
+                <a href="javascript:void(0)" class="arrow" style="z-index: 999999"><i class="ico-arrow"></i></a>
+            </div>
+        </div>
+    </div>
+
+
+    #{js([
+    "/assets/common/js/jquery.min.js",
+    "/assets/common/js/util.js",
+    "/assets/common/js/layer/layer.js",
+    "/assets/common/js/jquery.qrcode.min.js",
+    "/assets/common/js/layui/layui.js"
+    ])}
+
+    #{ready("/app/Plugin/AlipayPersonal/View/Assets/Js/Pay.js")}
+</body>
+</html>
