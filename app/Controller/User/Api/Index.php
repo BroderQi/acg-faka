@@ -19,6 +19,7 @@ use App\Service\Query;
 use App\Service\Shared;
 use App\Service\Shop;
 use App\Util\Client;
+use App\Util\CommoditySchema;
 use App\Util\Tree;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -61,6 +62,8 @@ class Index extends User
      */
     public function commodity(): array
     {
+        CommoditySchema::ensureInitialSoldColumn();
+
         $keywords = (string)$_GET['keywords'];
         $limit = (int)$_GET['limit'];
         $page = (int)$_GET['page'];
@@ -129,7 +132,7 @@ class Index extends User
                 'id', 'name', 'cover',
                 'status', 'delivery_way', 'price',
                 'user_price',
-                'level_disable', 'level_price', 'hide', 'owner', 'inventory_hidden', "recommend", 'category_id', 'stock', 'shared_id'
+                'level_disable', 'level_price', 'hide', 'owner', 'inventory_hidden', "recommend", 'category_id', 'stock', 'initial_sold', 'shared_id'
             ])
             ->withCount(['order as order_sold' => function (Builder $relation) {
                 $relation->where("delivery_status", 1);
@@ -203,6 +206,9 @@ class Index extends User
             if ($val['inventory_hidden'] == 1) {
                 $data[$key]['stock'] = $this->shop->getHideStock($data[$key]['stock']);
             }
+
+            $data[$key]['order_sold'] = (int)($val['initial_sold'] ?? 0) + (int)($val['order_sold'] ?? 0);
+            unset($data[$key]['initial_sold']);
         }
 
         $data = array_values($data);

@@ -15,6 +15,7 @@ use App\Model\UserCommodity;
 use App\Model\UserGroup;
 use App\Service\Shared;
 use App\Util\Client;
+use App\Util\CommoditySchema;
 use App\Util\Ini;
 use App\Util\Tree;
 use Illuminate\Database\Eloquent\Builder;
@@ -139,6 +140,7 @@ class Shop implements \App\Service\Shop
      */
     public function getItem(int|string $commodityId, ?User $user = null, ?UserGroup $group = null): array
     {
+        CommoditySchema::ensureInitialSoldColumn();
 
         $commodity = Commodity::query()->with(['owner' => function (Relation $relation) {
             $relation->select(["id", "username", "avatar"]);
@@ -148,7 +150,7 @@ class Shop implements \App\Service\Shop
                 "status", "owner", "delivery_way", "contact_type", "password_status", "level_price",
                 "level_disable", "coupon", "shared_id", "shared_code", "shared_premium", "shared_premium_type", "seckill_status",
                 "seckill_start_time", "seckill_end_time", "draft_status", "draft_premium", "inventory_hidden",
-                "widget", "minimum", "maximum", "shared_sync", "config", "stock", "code", "shared_amount_sync", "shared_config_sync"])
+                "widget", "minimum", "maximum", "shared_sync", "config", "stock", "initial_sold", "code", "shared_amount_sync", "shared_config_sync"])
             ->withCount(['order as order_sold' => function (Builder $relation) {
                 $relation->where("delivery_status", 1);
             }]);
@@ -249,6 +251,9 @@ class Shop implements \App\Service\Shop
         if (!$array['cover']) {
             $array['cover'] = "/favicon.ico";
         }
+
+        $array['order_sold'] = (int)($array['initial_sold'] ?? 0) + (int)($array['order_sold'] ?? 0);
+        unset($array['initial_sold']);
 
         $array['share_url'] = Client::getUrl() . "/item/{$array['id']}";
         $array['login'] = (bool)$user;

@@ -57,6 +57,7 @@ use Kernel\Exception\JSONException;
  * @property array $shared_stock
  * @property float $draft_premium
  * @property int $stock
+ * @property int $initial_sold
  */
 class Commodity extends Model
 {
@@ -82,6 +83,7 @@ class Commodity extends Model
         'status' => 'integer',
         'hide' => 'integer',
         'stock' => 'integer',
+        'initial_sold' => 'integer',
         'owner' => 'integer',
         'integral' => 'integer',
         'delivery_way' => 'integer',

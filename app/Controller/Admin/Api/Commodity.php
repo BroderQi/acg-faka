@@ -12,6 +12,7 @@ use App\Interceptor\ManageSession;
 use App\Model\ManageLog;
 use App\Service\Query;
 use App\Util\Client;
+use App\Util\CommoditySchema;
 use App\Util\Date;
 use App\Util\Ini;
 use App\Util\Str;
@@ -36,6 +37,8 @@ class Commodity extends Manage
      */
     public function data(): array
     {
+        CommoditySchema::ensureInitialSoldColumn();
+
         $map = $_POST;
         $get = new Get(\App\Model\Commodity::class);
         $get->setPaginate((int)$this->request->post("page"), (int)$this->request->post("limit"));
@@ -111,6 +114,8 @@ class Commodity extends Manage
      */
     public function save(Request $request): array
     {
+        CommoditySchema::ensureInitialSoldColumn();
+
         $map = $request->post(flags: Filter::NORMAL);
 
         //create new
@@ -155,6 +160,10 @@ class Commodity extends Manage
         //解析配置文件
         if ($map['config']) {
             Ini::toArray($map['config']);
+        }
+
+        if (array_key_exists('initial_sold', $map)) {
+            $map['initial_sold'] = max(0, (int)$map['initial_sold']);
         }
 
         $save = new Save(\App\Model\Commodity::class);

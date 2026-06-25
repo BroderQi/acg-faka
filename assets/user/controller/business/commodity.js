@@ -49,6 +49,14 @@
                             placeholder: "会员零售价",
                             required: true
                         },
+                        {
+                            title: "初始销售数量",
+                            name: "initial_sold",
+                            type: "number",
+                            default: 0,
+                            placeholder: "用户看到的已售会加上这个数量",
+                            tips: "前台已售 = 初始销售数量 + 真实已发货订单数量"
+                        },
                         {title: "排序", name: "sort", type: "input", default: 1000, placeholder: "排序，越小越靠前"},
                         {title: "状态", name: "status", type: "switch", text: "启用"},
                     ]
@@ -496,6 +504,7 @@ ACC_JP_6M_0KLD-22MM-PP31║地区:日区·时长:6个月
                 return item.stock;
             }
         }
+        , {field: 'initial_sold', title: '初始销量'}
         , {field: 'price', title: '零售价'}
         , {field: 'user_price', title: '会员价'}
         , {field: 'order_today_amount', title: '今日'}
@@ -558,6 +567,9 @@ ACC_JP_6M_0KLD-22MM-PP31║地区:日区·时长:6个月
         {field: 'id', title: '商品ID'},
         {
             field: 'card_success_count', title: '已出售'
+        },
+        {
+            field: 'initial_sold', title: '初始销售数量'
         },
         {
             field: 'delivery_way', title: '发货方式', dict: "_commodity_delivery_way"

@@ -12,6 +12,7 @@ use App\Interceptor\UserSession;
 use App\Interceptor\Waf;
 use App\Service\Query;
 use App\Util\Client;
+use App\Util\CommoditySchema;
 use App\Util\Date;
 use App\Util\Ini;
 use App\Util\Str;
@@ -33,6 +34,8 @@ class Commodity extends User
      */
     public function data(): array
     {
+        CommoditySchema::ensureInitialSoldColumn();
+
         $map = $_POST;
         $map['equal-owner'] = $this->getUser()->id;
         $get = new Get(\App\Model\Commodity::class);
@@ -85,6 +88,8 @@ class Commodity extends User
      */
     public function save(Request $request): array
     {
+        CommoditySchema::ensureInitialSoldColumn();
+
         $map = $request->post(flags: Filter::NORMAL);
         $user = $this->getUser();
 
@@ -140,6 +145,10 @@ class Commodity extends User
         //解析配置文件
         if ($map['config']) {
             Ini::toArray($map['config']);
+        }
+
+        if (array_key_exists('initial_sold', $map)) {
+            $map['initial_sold'] = max(0, (int)$map['initial_sold']);
         }
 
         $save = new Save(\App\Model\Commodity::class);
