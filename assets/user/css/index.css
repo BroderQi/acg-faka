@@ -153,10 +153,18 @@ body {
     height: 160px;
     position: relative;
     transition: transform .25s ease;
-    background-position: center !important;
-    background-size: contain !important;
-    background-repeat: no-repeat !important;
     background-color: rgba(255, 255, 255, .55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.acg-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
 }
 
 /* 内容容器弹性布局，底部元素对齐 */
