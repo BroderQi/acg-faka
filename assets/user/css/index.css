@@ -153,6 +153,10 @@ body {
     height: 160px;
     position: relative;
     transition: transform .25s ease;
+    background-position: center !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
+    background-color: rgba(255, 255, 255, .55);
 }
 
 /* 内容容器弹性布局，底部元素对齐 */
@@ -303,6 +307,9 @@ body {
     border-radius: 50%;
     display: inline-block;
     margin-right: 6px;
+    background-position: center !important;
+    background-size: contain !important;
+    background-repeat: no-repeat !important;
 }
 
 /* 布局微调 */
@@ -746,7 +753,7 @@ body {
 .pay-list .pay img {
     width: 20px;
     height: 20px;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 6px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
 }
@@ -1241,7 +1248,7 @@ body {
 .goods-image {
     width: 72px;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     border-radius: 12px;
     border: 2px solid white;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -1720,13 +1727,14 @@ body {
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     display: block;
 }
 
 .acg-cover {
     position: relative;
     overflow: hidden;
+    background: rgba(255, 255, 255, .55);
 }
 
 .flex-fill {

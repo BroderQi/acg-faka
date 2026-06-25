@@ -15,7 +15,7 @@
             const isSoldOut = item.stock == 0;
             $ItemList.append(`<a href="${!isSoldOut ? `/item/${item.id}` : `javascript:void(0);`}" class="col-12 col-md-6 col-lg-3 mb-3" data-id="${item.id}">
           <div class="acg-card ${isSoldOut ? `soldout` : ``} h-100">
-            <div class="acg-thumb" style="background: url('${item.cover}') center/cover no-repeat;"></div>
+            <div class="acg-thumb" style="background-image: url('${item.cover}');"></div>
             <div class="p-3">
               <div class="tags">
               <span class="badge-soft badge-soft-success">${item.delivery_way === 0 ? '自动发货' : '在线发货'}</span>
