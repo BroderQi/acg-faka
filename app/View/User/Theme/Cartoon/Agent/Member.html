@@ -58,7 +58,7 @@
                     , {
                         field: 'avatar', title: '用户', formatter: function (val, item) {
                             if (!item.avatar) {
-                                item.avatar = "/favicon.ico";
+                                item.avatar = "/assets/static/images/site-mark.svg";
                             }
                             return '<span><img src="' + item.avatar + '"  style="width: 18px;border-radius: 100%;"/> ' + item.username + '</span> '
                         }

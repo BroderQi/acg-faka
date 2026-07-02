@@ -104,7 +104,7 @@ class Shop implements \App\Service\Shop
             }
 
             if (!$item->icon) {
-                $category[$index]['icon'] = '/favicon.ico';
+                $category[$index]['icon'] = '/assets/static/images/site-mark.svg';
             }
         }
 
@@ -249,7 +249,7 @@ class Shop implements \App\Service\Shop
         }
 
         if (!$array['cover']) {
-            $array['cover'] = "/favicon.ico";
+            $array['cover'] = "/assets/static/images/site-mark.svg";
         }
 
         $array['order_sold'] = (int)($array['initial_sold'] ?? 0) + (int)($array['order_sold'] ?? 0);

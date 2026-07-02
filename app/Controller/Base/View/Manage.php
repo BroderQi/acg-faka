@@ -41,6 +41,9 @@ abstract class Manage extends \App\Controller\Base\Manage
                 $data["config"][$k] = $v;
             }
 
+            $data['brand_logo'] = !empty($cfg['logo']) ? $cfg['logo'] : "/assets/static/images/site-mark.svg";
+            $data['site_favicon'] = "/assets/static/images/site-mark.svg";
+
             if (Client::isMobile() && $data['config']['background_mobile_url']) {
                 $data['config']['background_url'] = $data['config']['background_mobile_url'];
             }

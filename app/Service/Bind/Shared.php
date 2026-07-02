@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Service\Bind;
 
 
+use App\Service\Image;
 use App\Model\Commodity;
 use App\Util\Http;
 use App\Util\Ini;
@@ -20,6 +21,32 @@ class Shared implements \App\Service\Shared
 
     #[Inject]
     private Client $http;
+
+    #[Inject]
+    private Image $image;
+
+    private function isAbsoluteUrl(string $url): bool
+    {
+        return (bool)preg_match('#^(https?:)?//#i', $url);
+    }
+
+    private function resolveRemoteUrl(string $baseDomain, string $path): string
+    {
+        $path = trim($path);
+        if ($path === '') {
+            return '';
+        }
+
+        if ($this->isAbsoluteUrl($path)) {
+            if (str_starts_with($path, '//')) {
+                $scheme = parse_url($baseDomain, PHP_URL_SCHEME) ?: 'https';
+                return $scheme . ':' . $path;
+            }
+            return $path;
+        }
+
+        return rtrim($baseDomain, '/') . '/' . ltrim($path, '/');
+    }
 
     /**
      * @param string $url
@@ -638,6 +665,13 @@ class Shared implements \App\Service\Shared
         $commodity->seckill_status = $remoteItem['seckill_status'];
         $commodity->seckill_start_time = $remoteItem['seckill_start_time'];
         $commodity->seckill_end_time = $remoteItem['seckill_end_time'];
+        if (!empty($remoteItem['cover'])) {
+            $remoteCover = $this->resolveRemoteUrl($shared->domain, (string)$remoteItem['cover']);
+            if ($this->isAbsoluteUrl((string)$remoteItem['cover']) || $this->isAbsoluteUrl((string)$commodity->cover)) {
+                $download = $this->image->downloadRemoteImage($remoteCover);
+                $commodity->cover = $download[0];
+            }
+        }
         $commodity->widget = is_array($remoteItem['widget']) ? json_encode($remoteItem['widget']) : $remoteItem['widget'];
         $commodity->minimum = $remoteItem['minimum'];
         $commodity->maximum = $remoteItem['maximum'];

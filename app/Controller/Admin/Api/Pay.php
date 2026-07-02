@@ -96,7 +96,7 @@ class Pay extends Manage
         $appStore = (array)json_decode((string)file_get_contents(BASE_PATH . "/runtime/plugin/store.cache"), true);
         foreach ($plugins as $index => $plugin) {
             if (!array_key_exists($plugin["id"], $appStore)) {
-                $plugins[$index]['icon'] = "/favicon.ico";
+                $plugins[$index]['icon'] = "/assets/static/images/site-mark.svg";
             } else {
                 $plugins[$index]['icon'] = \App\Service\App::APP_URL . $appStore[$plugin["id"]]['icon'];
                 if ($plugin['info']['version'] !== $appStore[$plugin['id']]["version"]) {

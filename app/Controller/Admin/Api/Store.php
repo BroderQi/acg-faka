@@ -35,6 +35,58 @@ class Store extends Manage
     #[Inject]
     private Image $image;
 
+    private function isAbsoluteUrl(string $url): bool
+    {
+        return (bool)preg_match('#^(https?:)?//#i', $url);
+    }
+
+    private function resolveRemoteUrl(string $baseDomain, string $path): string
+    {
+        $path = trim($path);
+        if ($path === '') {
+            return '';
+        }
+
+        if ($this->isAbsoluteUrl($path)) {
+            if (str_starts_with($path, '//')) {
+                $scheme = parse_url($baseDomain, PHP_URL_SCHEME) ?: 'https';
+                return $scheme . ':' . $path;
+            }
+            return $path;
+        }
+
+        return rtrim($baseDomain, '/') . '/' . ltrim($path, '/');
+    }
+
+    private function shouldDownloadImage(string $rawPath, bool $imageDownload): bool
+    {
+        return $imageDownload || $this->isAbsoluteUrl($rawPath);
+    }
+
+    private function replaceDescriptionImages(string $description, Shared $shared, bool $imageDownload): string
+    {
+        return preg_replace_callback(
+            '#(<img[^>]*\bsrc=["\'])([^"\']+)(["\'][^>]*>)#i',
+            function (array $matches) use ($shared, $imageDownload) {
+                $rawPath = trim($matches[2]);
+                if ($rawPath === '' || str_starts_with($rawPath, 'data:')) {
+                    return $matches[0];
+                }
+
+                $remoteUrl = $this->resolveRemoteUrl($shared->domain, $rawPath);
+                $targetUrl = $remoteUrl;
+
+                if ($this->shouldDownloadImage($rawPath, $imageDownload)) {
+                    $download = $this->image->downloadRemoteImage($remoteUrl);
+                    $targetUrl = $download[0];
+                }
+
+                return $matches[1] . $targetUrl . $matches[3];
+            },
+            $description
+        ) ?? $description;
+    }
+
     /**
      * @return array
      */
@@ -175,8 +227,8 @@ class Store extends Manage
                 $commodity->description = $item['description'];
 
                 //正则处理
-                preg_match_all('#<img.*?src="(/.*?)"#', $commodity->description, $matchs);
-                $list = (array)$matchs[1];
+                $commodity->description = $this->replaceDescriptionImages($commodity->description, $shared, $imageDownload);
+                $list = [];
 
                 if (count($list) > 0) {
                     foreach ($list as $e) {
@@ -191,11 +243,11 @@ class Store extends Manage
                 }
 
                 //远端cover下载
-                if ($imageDownload) {
-                    $download = $this->image->downloadRemoteImage($shared->domain . $item['cover']);
+                if ($this->shouldDownloadImage((string)$item['cover'], $imageDownload)) {
+                    $download = $this->image->downloadRemoteImage($this->resolveRemoteUrl($shared->domain, (string)$item['cover']));
                     $commodity->cover = $download[0];
                 } else {
-                    $commodity->cover = $shared->domain . $item['cover'];
+                    $commodity->cover = $this->resolveRemoteUrl($shared->domain, (string)$item['cover']);
                 }
 
                 $commodity->status = $shelves;

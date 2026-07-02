@@ -180,6 +180,7 @@
                                                 title: "远端图片本地化",
                                                 name: "image_download",
                                                 type: "switch",
+                                                default: 1,
                                                 tips: "启用后，导入对方商品时，会自动将对方所有图片资源下载至本地"
                                             },
                                             {

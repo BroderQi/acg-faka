@@ -70,12 +70,17 @@ abstract class User extends \App\Controller\Base\User
 
             $data['title'] = $title;
             $data['app']['version'] = \config("app")['version'];
-            $data['favicon'] = "/favicon.ico";
+            $data['favicon'] = "/assets/static/images/site-mark.svg";
+            $data['site_favicon'] = "/assets/static/images/site-mark.svg";
 
             $cfg = Config::list();
 
             foreach ($cfg as $k => $v) {
                 $data["config"][$k] = $v;
+            }
+
+            if (!empty($cfg['logo'])) {
+                $data['favicon'] = $cfg['logo'];
             }
 
             if (in_array($template, $this->indexTemplateList)) {

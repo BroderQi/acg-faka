@@ -185,7 +185,7 @@ class Index extends User
             );
 
             if (!$val['cover']) {
-                $data[$key]['cover'] = "/favicon.ico";
+                $data[$key]['cover'] = "/assets/static/images/site-mark.svg";
             }
 
             //分站自定义名称和价格

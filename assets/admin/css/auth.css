@@ -151,7 +151,7 @@ body.ay-bg {
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: url("/favicon.ico") no-repeat center/contain;
+    background: var(--ay-logo, url("/assets/static/images/site-mark.svg")) no-repeat center/contain;
     box-shadow: 0 8px 26px rgba(255, 154, 202, .25);
 }
 

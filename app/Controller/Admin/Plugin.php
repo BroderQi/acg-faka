@@ -144,7 +144,7 @@ HTML;
 
 
         if (!array_key_exists($plugin, $appStore)) {
-            $icon = "/favicon.ico";
+            $icon = "/assets/static/images/site-mark.svg";
         } else {
             $icon = App::APP_URL . $appStore[$plugin]['icon'];
         }

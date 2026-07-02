@@ -32,7 +32,7 @@ class Plugin extends Manage
 
             $plugins[$key]["id"] = $plugin[\App\Consts\Plugin::PLUGIN_NAME];
             if (!array_key_exists($plugins[$key]["id"], $appStore)) {
-                $plugins[$key]['icon'] = "/favicon.ico";
+                $plugins[$key]['icon'] = "/assets/static/images/site-mark.svg";
             } else {
                 $plugins[$key]['icon'] = \App\Service\App::APP_URL . $appStore[$plugins[$key]["id"]]['icon'];
 
